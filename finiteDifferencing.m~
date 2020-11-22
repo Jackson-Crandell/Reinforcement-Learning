@@ -59,19 +59,19 @@ for i = 1:iterations % Change to while loop and add stopping condition
     x(:,1) = 1; %Starting at position 1
     J = zeros(1,rollouts);
     theta = zeros(1,rollouts);
-
+    J(1) = 
     for m = 1:rollouts
         for k = 1:Horizon-1
             delta_theta(m) = rand;
             theta(m) = theta(m) + delta_theta(m);
             u(m,k) = theta(m)*x(m,k);
             x(m,k+1) = A*x(m,k)  + B*u(m,k); %Trajectory
-            J(m) = x(m,k)'*Q*x(m,k) + u(m,k)'*R*u(m,k); %Cost function
+            J(m) = J(m) + x(m,k)'*Q*x(m,k) + u(m,k)'*R*u(m,k); %Cost function
         end
     end
     delta_J = J - J(1);
     grad_J = (inv(delta_theta * delta_theta')) * delta_theta * delta_J';
-    theta(m) = theta(m) + alpha*grad_J
+    theta(m) = theta(m) + -1*alpha*grad_J;
 end
-
+theta(rollouts-1)
 
