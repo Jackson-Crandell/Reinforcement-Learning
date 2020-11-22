@@ -13,7 +13,7 @@ global x0;
 
 global sigma; 
 
-A = [0.1];
+A = [0.01];
 B = [0.8];
 Q = [0.01];
 R = [0.001];
@@ -52,13 +52,12 @@ p = 0.9
 J = expected_cost(theta);   % Set the initial cost 
 
 grad_J = 0; 
-eps = 1e-4
+eps = 1e-6
 
 iter = 0;       % number of iterations
-
-converged_count = 0; 
-
-while converged_count < 10
+grad_converged = 1; 
+converged_count
+while (grad_converged > eps) && (converged_count > 5) || (iter < 10)
     
     iter = iter + 1;
      
@@ -91,8 +90,8 @@ while converged_count < 10
 
     J(1,iter+1) = expected_cost(theta(1,iter));
    
-    grad_converged = abs(grad_J(1,iter))
-    %grad_converged = abs(J(1,iter+1) - J(1,iter))
+    %grad_converged = abs(theta(1,iter+1) -grad_J(1,iter)
+    grad_converged = abs(J(1,iter+1) - J(1,iter))
 
     if grad_converged < eps
         converged_count = converged_count + 1; 
@@ -102,6 +101,7 @@ while converged_count < 10
     fprintf('Iteration %i: theta = %i \n', iter,theta(1,iter))
 end
 %%
+
 
 subplot(2,2,1); 
 plot(1:1:length(J),J)
@@ -116,10 +116,7 @@ subplot(2,2,3);
 plot(1:1:length(grad_J),grad_J)
 
 
-[~,x_fd] = trajectory_cost(theta(end));
 
-subplot(2,2,4); 
-plot(1:1:length(x_fd),x_fd)
 
 
 
