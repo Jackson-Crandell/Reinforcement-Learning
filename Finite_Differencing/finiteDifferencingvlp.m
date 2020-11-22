@@ -13,11 +13,11 @@ global x0;
 
 global sigma; 
 
-A = [0.1];
-B = [0.8];
+A = [0.4];
+B = [0.9];
 Q = [0.01];
 R = [0.001];
-dt = 0.01;
+dt = 0.001;
 
 x0 = 1;   % initialize initial state
 Horizon = 300;        %N
@@ -86,7 +86,7 @@ while converged_count < 10
     % Update the parameter in the policy 
     % backtracking line search
     % alpha = line_search(theta,grad_J,alpha,c,p)
-    
+    alpha = 1/sqrt(iter)
     theta(1,iter+1) = theta(1,iter) + alpha*grad_J(1,iter);
 
     J(1,iter+1) = expected_cost(theta(1,iter));
@@ -119,6 +119,8 @@ plot(1:1:length(grad_J),grad_J)
 [~,x_fd] = trajectory_cost(theta(end));
 
 subplot(2,2,4); 
+plot(1:1:length(x_lqr),x_lqr)
+hold on
 plot(1:1:length(x_fd),x_fd)
 
 
