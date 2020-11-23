@@ -123,7 +123,12 @@ plot(1:1:length(x_lqr),x_lqr)
 hold on
 plot(1:1:length(x_fd),x_fd)
 
-
+%%
+%B = sigma ^2
+%eps = randn %% used to make gaussian
+%phi = x
+% u = -kx
+%x = x* gaussian
 
 
 

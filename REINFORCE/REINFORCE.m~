@@ -1,4 +1,4 @@
-%% Finite Differencing
+%% REINFORCE
 % Dynamics
 global A; 
 global B; 
@@ -21,35 +21,21 @@ dt = 0.001;
 
 x0 = 1;   % initialize initial state
 Horizon = 300;        %N
-rollouts = 100; %M
-
 
 % Optimal Control Gain
 [K_LQR,S,E] = dlqr(A,B,Q,R);
 
-% [K_LQR,S,E] = lqr(A,B,Q,R);
-
-[~,x_lqr] = trajectory_cost(K_LQR);
+%[~,x_lqr] = trajectory_cost(K_LQR);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 u = zeros(1,Horizon-1);
 r = zeros(1,Horizon);
 
-delta_theta = zeros(rollouts,1);
-delta_J = zeros(rollouts,1);
+%sigma = 0.01;    % noise level 
 
-sigma = 0.01;    % noise level 
-
-theta = rand;      % initialize theta
-
-% Line search parameters
-alpha = 0.3;    % learning rate 
-c = 0.3 
-p = 0.9
-
-
-J = expected_cost(theta);   % Set the initial cost 
+theta = .3;      % initialize theta
+alpha = 0.001;    % learning rate 
 
 grad_J = 0; 
 eps = 1e-4
@@ -64,35 +50,45 @@ while converged_count < 10
      
     expected_reward = 0; 
     
-    % Every itetation compute m rollouts
-    for m = 1:rollouts
-     
-        % Perturb the parameter in the policy 
-        delta_theta(m,1) = (2*randn - 1)*sigma;  % randomn number bw [-1,1]*sigma
-        new_theta = theta(1,iter) + delta_theta(m,1);  
+    x = x0;
+    target = 0; 
+    
+    variance = 1;
+    b(k) = ones(1,Horizon);
+    gaussian(1,iter) = sqrt(variance)*randn(1) + 1; %Gaussian with mean 1 and variance 
+    %b(1,iter) = variance;
+    epsilon(1,iter) = gaussian(iter);
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%
+    for k = 1:Horizon
         
-        % total reward of the current rollout
-        [new_J,~] = trajectory_cost(new_theta);
-        
-        % store the difference in the reward between current rollout and 
-        % reward at previous iteration
-        delta_J(m,1) = new_J - J(iter);
+        u(1,k) = -theta(1,iter)*x(1,k) + b(k)*gaussian(1,iter);
+        x(1,k+1) = A*x(1,k) + B*u(1,k);
+        phi(1,k) = x(1,k);
+        %Compute the running cost 
+        r(1,k) = (x(1,k) - target)'*Q*(x(1,k) - target) + u(1,k)'*R*u(1,k);       
         
     end
     
-    % Compute the gradient using the Finite Difference Method
-    grad_J(1,iter) = (inv(delta_theta' * delta_theta)) * delta_theta' * delta_J; 
+    % reward = -cost
+    cost = -sum(r(1,:));
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % total reward of the current rollout
+    %[reward,x,epsilon,b] = trajectory_cost(new_theta);
+    %phi = x(:,Horizon-1);
+
+    % Compute the gradient using the REINFORCE Method
+    grad_J(1,iter) = (1/Horizon) * cost * sum(phi'*inv(1*1')*1*epsilon(iter)'); 
     
     % Update the parameter in the policy 
-    % backtracking line search
-    % alpha = line_search(theta,grad_J,alpha,c,p)
-    %alpha = 1/sqrt(alpha)
+    alpha = 1/sqrt(alpha)
     theta(1,iter+1) = theta(1,iter) + alpha*grad_J(1,iter);
 
-    J(1,iter+1) = expected_cost(theta(1,iter));
+    %J(1,iter+1) = expected_cost(theta(1,iter));
    
     grad_converged = abs(grad_J(1,iter))
-    %grad_converged = abs(J(1,iter+1) - J(1,iter))
 
     if grad_converged < eps
         converged_count = converged_count + 1; 
@@ -122,8 +118,6 @@ subplot(2,2,4);
 plot(1:1:length(x_lqr),x_lqr)
 hold on
 plot(1:1:length(x_fd),x_fd)
-
-
 
 
 
