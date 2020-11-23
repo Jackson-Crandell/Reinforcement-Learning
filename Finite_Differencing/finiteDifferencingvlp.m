@@ -86,7 +86,7 @@ while converged_count < 10
     % Update the parameter in the policy 
     % backtracking line search
     % alpha = line_search(theta,grad_J,alpha,c,p)
-    %alpha = 1/sqrt(alpha)
+    alpha = 1/sqrt(alpha)
     theta(1,iter+1) = theta(1,iter) + alpha*grad_J(1,iter);
 
     J(1,iter+1) = expected_cost(theta(1,iter));
