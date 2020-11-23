@@ -39,7 +39,7 @@ r = zeros(1,Horizon);
 delta_theta = zeros(rollouts,1);
 delta_J = zeros(rollouts,1);
 
-sigma = 0.01;    % noise level 
+sigma = 0.05;    % noise level 
 
 theta = rand;      % initialize theta
 
@@ -52,7 +52,7 @@ p = 0.9
 J = expected_cost(theta);   % Set the initial cost 
 
 grad_J = 0; 
-eps = 1e-4
+eps = 1e-6
 
 iter = 0;       % number of iterations
 
@@ -86,7 +86,7 @@ while converged_count < 10
     % Update the parameter in the policy 
     % backtracking line search
     % alpha = line_search(theta,grad_J,alpha,c,p)
-    alpha = 1/sqrt(alpha)
+    %alpha = 1/sqrt(alpha);
     theta(1,iter+1) = theta(1,iter) + alpha*grad_J(1,iter);
 
     J(1,iter+1) = expected_cost(theta(1,iter));
