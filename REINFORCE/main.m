@@ -25,9 +25,6 @@ rollouts = 100;
 % Optimal Control Gain
 [K_LQR,S,E] = dlqr(A,B,Q,R);
 
-%[~,x_lqr] = trajectory_cost(K_LQR);
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 u = zeros(1,Horizon-1);
 r = zeros(1,Horizon);
@@ -36,22 +33,25 @@ global sigma;
 sigma = 0.01;    % policy noise level 
 
 theta = 0.0;      % initialize theta
-alpha = 0.2;    % learning rate 
+alpha = 0.5;    % learning rate 
 
 grad_J = 0; 
-eps = 1e-4;
+eps = 1e-8;
+
+[J, ~] = trajectory_cost(theta,0);
 
 iter = 0;       % number of iterations
 converged_count = 0; 
+cost_change = 0; 
 
-while converged_count < 10
+% Run algorithm until the gradient converges or the cost changes direction
+while converged_count < 10 && cost_change < 1
     
     iter = iter + 1;
-       
     %%%%%%%%%%%%%%%%%%%%%%%%%%
     % Sample trajectories with current policy
     for m = 1:rollouts
-        [running_cost(1,m), epsilon(:,m)] = trajectory_cost(theta(1,iter),1);
+        [running_cost(1,m),epsilon(:,m)] = trajectory_cost(theta(1,iter),1);
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,53 +63,45 @@ while converged_count < 10
    
     grad_J(1,iter) = expectation/rollouts;
     
-    % Update the parameter in the policy 
-    %alpha = 1/sqrt(alpha)
-    
+    % Compute the new theta policy using gradient ascent
     theta(1,iter+1) = theta(1,iter) + alpha*grad_J(1,iter);
    
-    grad_converged = abs(grad_J(1,iter));
+    grad_converged = norm(grad_J(1,iter));
 
     if grad_converged < eps
         converged_count = converged_count + 1; 
     end 
+    % Compute the cost of the new policy
+    [J(1,iter+1), ~] = trajectory_cost(theta(1,iter+1),0);
     
-    [J(1,iter), ~] = trajectory_cost(theta(1,iter),0);
+    % Check the cost doesn't change directions
+    delta_grad_J = abs(J(1,iter+1)) - abs(J(1,iter)); 
+    if delta_grad_J > 0
+        cost_change = cost_change ; 
+    end 
     
     fprintf('Iteration %i: theta = %i , Cost = %i, grad_J = %i \n', iter,theta(1,iter),J(1,iter),grad_J(1,iter)); 
+    
+    
 end
 %%
 
-subplot(2,2,1); 
-plot(1:1:length(J),J)
-title("Reward")
-xlabel("iteration")
-ylabel("reward")
+subplot(1,3,1); 
+plot(1:1:length(J),J,'linewidth',2)
+title('$Reward$','Interpreter','latex','fontsize',32);
+xlabel('Iteration','fontsize',20);
 
-subplot(2,2,2); 
-plot(1:1:length(theta),theta)
+subplot(1,3,2); 
+plot(1:1:length(theta),-theta,'linewidth',2)
 hold on
-plot(1:1:length(theta),K_LQR*ones(1,length(theta)))
-title("Theta")
-xlabel("iteration")
-ylabel("theta")
+plot(1:1:length(theta),K_LQR*ones(1,length(theta)), 'linewidth',4)
+title('$K$','Interpreter','latex','fontsize',32);
+xlabel('Iteration','fontsize',20);
 
-
-subplot(2,2,3); 
-plot(1:1:length(grad_J),grad_J)
-title("Gradient of J")
-xlabel("iteration")
-ylabel("grad_j")
-
-%[~,x_fd] = trajectory_cost(theta(end));
-
-% subplot(2,2,4); 
-% plot(1:1:length(x_lqr),x_lqr)
-% hold on
-% plot(1:1:length(x_fd),x_fd)
-
-
-
+subplot(1,3,3); 
+plot(1:1:length(grad_J),-grad_J,'linewidth',2)
+title('$\nabla_{\theta} J$','Interpreter','latex','fontsize',32);
+xlabel('Iteration','fontsize',20);
 
 
 

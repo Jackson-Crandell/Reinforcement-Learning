@@ -5,6 +5,6 @@ function cost = expected_cost(theta)
     for m = 1:rollouts
         cost = cost + trajectory_cost(theta);
     end
-    cost = cost/rollouts
-
+    
+    cost = cost/rollouts;
 end
