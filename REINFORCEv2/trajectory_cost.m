@@ -1,4 +1,4 @@
-function [cost,x,epsilon] = trajectory_cost(theta)
+function [cost,x,epsilon] = trajectory_cost(theta,noise)
     
     global A; 
     global B; 
@@ -15,9 +15,15 @@ function [cost,x,epsilon] = trajectory_cost(theta)
     
     for k = 1:Horizon
         
-        epsilon(1,k) = sqrt(sigma2)*randn; %Gaussian with mean 0 and variance 
-        %epsilon(1,k) = randn; %Gaussian with mean 0 and variance 
-        u(1,k) = (theta + epsilon(1,k))*(-x(1,k));
+        if noise == 1
+            epsilon(1,k) = sqrt(sigma2)*randn; %Gaussian with mean 0 and variance 
+        end 
+        
+        if noise == 0 
+            epsilon(1,k) = 0; 
+        end 
+        
+        u(1,k) = -theta*x(1,k) + epsilon(1,k)*x(1,k);
         x(1,k+1) = A*x(1,k) + B*u(1,k);
 
         %Compute the running cost 

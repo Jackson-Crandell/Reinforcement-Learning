@@ -51,7 +51,7 @@ while converged_count < 10
     %%%%%%%%%%%%%%%%%%%%%%%%%%
     % Sample trajectories with current policy
     for m = 1:rollouts
-        [running_cost(1,m), epsilon(:,m)] = trajectory_cost(theta(1,iter));
+        [running_cost(1,m), epsilon(:,m)] = trajectory_cost(theta(1,iter),1);
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,7 +73,7 @@ while converged_count < 10
         converged_count = converged_count + 1; 
     end 
     
-    J(1,iter) = sum(running_cost(1,:))/rollouts; 
+    [J(1,iter), ~] = trajectory_cost(theta(1,iter),0);
     
     fprintf('Iteration %i: theta = %i , Cost = %i, grad_J = %i \n', iter,theta(1,iter),J(1,iter),grad_J(1,iter)); 
 end
