@@ -32,8 +32,8 @@ rollouts = 100;
 u = zeros(1,Horizon-1);
 r = zeros(1,Horizon);
 
-global sigma;
-sigma = 0.01;    % policy noise level 
+global sigma2;
+sigma2 = 1e-4;    % policy noise level 
 
 theta = 0.0;      % initialize theta
 alpha = 0.2;    % learning rate 

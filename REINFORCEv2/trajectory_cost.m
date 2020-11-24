@@ -8,7 +8,7 @@ function [cost,x,epsilon] = trajectory_cost(theta,noise)
     global Horizon; 
     
     global x0; 
-    global sigma2;
+    global sigma;
     
     x = x0;
     target = 0; 
@@ -16,7 +16,7 @@ function [cost,x,epsilon] = trajectory_cost(theta,noise)
     for k = 1:Horizon
         
         if noise == 1
-            epsilon(1,k) = sqrt(sigma2)*randn; %Gaussian with mean 0 and variance 
+            epsilon(1,k) = sigma*randn; %Gaussian with mean 0 and variance 
         end 
         
         if noise == 0 
