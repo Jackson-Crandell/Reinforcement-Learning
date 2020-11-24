@@ -82,16 +82,24 @@ end
 
 subplot(2,2,1); 
 plot(1:1:length(J),J)
+title("Reward")
+xlabel("iteration")
+ylabel("reward")
 
 subplot(2,2,2); 
 plot(1:1:length(theta),theta)
 hold on
 plot(1:1:length(theta),K_LQR*ones(1,length(theta)))
+title("Theta")
+xlabel("iteration")
+ylabel("theta")
 
 
 subplot(2,2,3); 
 plot(1:1:length(grad_J),grad_J)
-
+title("Gradient of J")
+xlabel("iteration")
+ylabel("grad_j")
 
 %[~,x_fd] = trajectory_cost(theta(end));
 
