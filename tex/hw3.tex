@@ -125,12 +125,12 @@
 	\begin{align*}
 		&  log(p(\vec{u}_{i}|\vec{x}_{i};\vec{\theta})) = log\Bigg(  \frac{1}{(2\pi)^{m/2}| \vec{B}\vec{B}^{T}|^{1/2}}exp\Big( -\frac{1}{2}(\vec{u} - \vec{\Phi}\vec{\theta})^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}(\vec{u}-\vec{\Phi}\vec{\theta})  \Big)    \Bigg) \\
 		& = log\Bigg( \frac{1}{(2\pi)^{m/2}| \vec{B}\vec{B}^{T}|^{1/2}} \Bigg) + log\Bigg( exp\Big( -\frac{1}{2}(\vec{u} - \vec{\Phi}\vec{\theta})^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}(\vec{u}-\vec{\Phi}\vec{\theta})  \Big)  \Bigg)\\
-		& = -log\Big( (2\pi)^{m/2}\vec{B}\vec{B}^{T}|^{1/2} \Big) - \frac{1}{2}(\vec{u} - \vec{\Phi}\vec{\theta})^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}(\vec{u}-\vec{\Phi}\vec{\theta}) \\
-		& = -log\Big( (2\pi)^{m/2}\vec{B}\vec{B}^{T}|^{1/2} \Big) - \frac{1}{2}(\vec{u}^{T} -\vec{\theta}^{T} \vec{\Phi}^{T})\Big(\vec{B}\vec{B}^T\Big)^{-1}(\vec{u}-\vec{\Phi}\vec{\theta}) \\
-		& = -log\Big( (2\pi)^{m/2}\vec{B}\vec{B}^{T}|^{1/2} \Big) + \Bigg(-\frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}  + \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\Bigg)(\vec{u}-\vec{\Phi}\vec{\theta}) \\
-		& = -log\Big( (2\pi)^{m/2}\vec{B}\vec{B}^{T}|^{1/2} \Big)  -\frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u}	+ \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u} + \frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{\Phi}\vec{\theta} \\
+		& = -log\Big( (2\pi)^{m/2} |\vec{B}\vec{B}^{T}|^{1/2} \Big) - \frac{1}{2}(\vec{u} - \vec{\Phi}\vec{\theta})^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}(\vec{u}-\vec{\Phi}\vec{\theta}) \\
+		& = -log\Big( (2\pi)^{m/2} |\vec{B}\vec{B}^{T}|^{1/2} \Big) - \frac{1}{2}(\vec{u}^{T} -\vec{\theta}^{T} \vec{\Phi}^{T})\Big(\vec{B}\vec{B}^T\Big)^{-1}(\vec{u}-\vec{\Phi}\vec{\theta}) \\
+		& = -log\Big( (2\pi)^{m/2}|\vec{B}\vec{B}^{T}|^{1/2} \Big) + \Bigg(-\frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}  + \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\Bigg)(\vec{u}-\vec{\Phi}\vec{\theta}) \\
+		& = -log\Big( (2\pi)^{m/2}|\vec{B}\vec{B}^{T}|^{1/2} \Big)  -\frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u}	+ \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u} + \frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{\Phi}\vec{\theta} \\
 		& - \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{\Phi}\vec{\theta} \\
-		& = -log\Big( (2\pi)^{m/2}\vec{B}\vec{B}^{T}|^{1/2} \Big)  -\frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u} + \vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u} - \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{\Phi}\vec{\theta} \\
+		& = -log\Big( (2\pi)^{m/2}|\vec{B}\vec{B}^{T}|^{1/2} \Big)  -\frac{1}{2}\vec{u}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u} + \vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{u} - \frac{1}{2}\vec{\theta}^{T}\vec{\Phi}^{T}\Big(\vec{B}\vec{B}^T\Big)^{-1}\vec{\Phi}\vec{\theta} \\
 	\end{align*}
 	
 	We then compute the gradient of this expression with respect to $\vec{\theta}$ and substitute our parametrized policy $\vec{u} = \vec{\Phi}\vec{\theta} + \vec{B}\epsilon_{k}$:

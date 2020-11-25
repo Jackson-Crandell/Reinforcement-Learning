@@ -33,7 +33,7 @@ global sigma;
 sigma = 0.01;    % policy noise level 
 
 theta = 0.0;      % initialize theta
-alpha = 0.5;    % learning rate 
+alpha = 0.3;    % learning rate 
 
 grad_J = 0; 
 eps = 1e-8;
@@ -77,7 +77,7 @@ while converged_count < 10 && cost_change < 1
     % Check the cost doesn't change directions
     delta_grad_J = abs(J(1,iter+1)) - abs(J(1,iter)); 
     if delta_grad_J > 0
-        cost_change = cost_change ; 
+        cost_change = cost_change + 1 ; 
     end 
     
     fprintf('Iteration %i: theta = %i , Cost = %i, grad_J = %i \n', iter,theta(1,iter),J(1,iter),grad_J(1,iter)); 
@@ -91,6 +91,11 @@ plot(1:1:length(J),J,'linewidth',2)
 title('$Reward$','Interpreter','latex','fontsize',32);
 xlabel('Iteration','fontsize',20);
 
+
+% LQR outputs a positive K gain. Our controller is u = Kx therefore our 
+% theta will be negative. For purposes of comparison we flip theta to be 
+% positive and flip the policy gradient to indicate the direction of update
+% in this convention
 subplot(1,3,2); 
 plot(1:1:length(theta),-theta,'linewidth',2)
 hold on
